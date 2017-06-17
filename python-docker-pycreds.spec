@@ -1,6 +1,10 @@
 # Created by pyp2rpm-1.1.2 and rewrote manually afterwards
 %global pypi_name docker-pycreds
+%if 0%{?fedora}
 %bcond_without python3
+%else
+%bcond_with python3
+%endif
 # the test suite is diabled b/c it needs docker-credential-secretservice binary
 # and we don't have that now (Sep 2016) in Fedora
 %bcond_with tests
@@ -16,6 +20,7 @@ Source0:        https://files.pythonhosted.org/packages/source/d/%{pypi_name}/%{
 BuildArch:      noarch
 
 BuildRequires:  python2-devel
+BuildRequires:  python-setuptools
 BuildRequires:  python2-six
 
 %if %{with tests}
@@ -64,7 +69,9 @@ Python bindings for the docker credentials store API
 
 %build
 %py2_build
+%if %{with python3}
 %py3_build
+%endif # python3
 
 
 %install
@@ -72,7 +79,9 @@ Python bindings for the docker credentials store API
 # overwritten with every setup.py install (and we want the python2 version
 # to be the default for now).
 %py2_install
+%if %{with python3}
 %py3_install
+%endif # python3
 
 
 # we are not using setup.py test here b/c the project pins to specific versions
